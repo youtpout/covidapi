@@ -1,0 +1,33 @@
+﻿
+@using covidlibrary;
+@using System.Globalization;
+@model NewsTransportDto;
+@{
+    ViewData["Title"] = "News";
+}
+
+
+@section Metas{
+
+    <meta name="description" content="Latest news about covid and its consequences">
+}
+
+<h3>Last News</h3>
+<div class="row">
+    @if (Model.TotalNews > 0)
+    {
+        <div class="col-lg-12">
+            @foreach (var item in Model.NewsByDate)
+            {
+                <h5 style="color:#690000">@item.Date.ToString("yyyy-MM-dd") :</h5>
+                <ul style="list-style:none">
+                    @foreach (var news in item.News)
+                    {
+                        <li><i class="fas fa-pen-nib" style="font-size:12px;"></i> <span>@news.Content</span><a style="margin-left:10px; color:forestgreen;" href="@news.Source">(Source)</a></li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+
+</div>

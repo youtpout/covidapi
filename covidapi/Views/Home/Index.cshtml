@@ -1,0 +1,73 @@
+﻿@using covidlibrary;
+@using System.Globalization;
+@model IEnumerable<CsvData>;
+@{
+    ViewData["Title"] = "Stat";
+    var nfi = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+    nfi.NumberGroupSeparator = " ";
+}
+
+@section Metas{
+
+    <meta name="description" content="Welcome on Covid Tracker, last stat about covid-19, case confirmed/recovered/deaths infected by coronavirus by country, map with case atound the world">
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="infos">
+            <span class="h5" style="margin-right:20px;">Date : <span style="color:#690000">@ViewBag.Date</span></span>
+            <span class="h5">Cases : <span style="color:orange">@Model.Sum(c => c.Confirmed)?.ToString("#,0", nfi)</span></span>
+            <span class="h5">Recovered : <span class="text-success">@Model.Sum(c => c.Recovered)?.ToString("#,0", nfi)</span></span>
+            <span class="h5">Deaths : <span class="text-danger">@Model.Sum(c => c.Deaths)?.ToString("#,0", nfi)</span></span>
+        </div>
+        <table id="cases" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Cases
+                    </th>
+                    <th>
+                        Recovered
+                    </th>
+                    <th>
+                        Deaths
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Country)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Confirmed)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Recovered)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Deaths)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cases').DataTable({
+                paging: false,
+                "aaSorting": []
+            });
+        });
+    </script>
+}

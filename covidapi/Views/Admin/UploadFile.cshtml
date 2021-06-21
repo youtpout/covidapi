@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewData["Title"] = "UploadFile";
+}
+<form method="post" enctype="application/x-www-form-urlencoded" asp-controller="Admin" asp-action="ClearCache">
+    <input type="submit" value="Clear cache" />
+</form>
+<br />
+<span>Files uploaded :</span>
+<br />
+<ul>
+    @foreach (var x in ViewBag.Files)
+    {
+        <li>@x</li>
+    }
+</ul>
+

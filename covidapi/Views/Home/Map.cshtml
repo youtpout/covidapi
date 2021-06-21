@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Map";
+}
+
+@section Metas{
+
+    <meta name="description" content="Map with worldwide indentified cases infected by coronavirus, cases of covid-19 may be grouped by country and not by city">
+}
+
+<div id="mapid" class="map-frame">
+    Map with worldwide indentified cases infected by coronavirus, cases of covid-19 may be grouped by country and not by city
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var map = L.map('mapid').setView([51.505, -0.09], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+
+        var datas =  @Html.Raw(Json.Serialize(ViewBag.datas));
+        if (datas && datas.length) {
+            for (var i = 0; i < datas.length; i++) {
+                var item = datas[i];
+                var poptext = (item.B||item.A) + "<br/>" + item.E+ " confirmed";
+                L.marker([item.C.G, item.C.H]).addTo(map).bindTooltip(poptext);
+            }
+        }
+    </script>
+}
+

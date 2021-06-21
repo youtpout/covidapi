@@ -1,0 +1,207 @@
+﻿@model covidlibrary.Coord
+@using covidlibrary;
+@{
+    ViewData["Title"] = "Around";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var casesByCity = ViewBag.cases as IEnumerable<CaseByCity>;
+}
+
+@section Metas{
+
+    <meta name="description" content="Search if they have some case infected by covid around you location, please note that our system does not include all of the cities that have confirmed cases, cases may be grouped by country and not by city">
+
+}
+
+
+<h3>Around</h3>
+
+<form asp-action="Around">
+    <div class="row">
+        <div style="display:none">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="margin-left:11px;">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input id="latitude" asp-for="Latitude" onchange="updateMarker()" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="margin-left:11px;">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input id="longitude" asp-for="Longitude" onchange="updateMarker()" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+        </div>
+        <div style="margin-left:11px;">
+            <div id="mapid" class="map-around">
+            </div>
+            <span class="text-info">You can move the marker.</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <button style="margin-left:10px" type="button" onclick="getLocation()" class="btn btn-primary">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        <input style="margin-left:20px" type="submit" value="Get Case Around" class="btn btn-primary" />
+        <button style="margin-left:20px" type="button" onclick="clearMarkers()" class="btn btn-primary">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</form>
+<div>
+    <p class="text-info">Please note that our system does not include all of the cities that have confirmed cases, cases may be grouped by country and not by city.</p>
+    <p id="x" class="text-danger"></p>
+    @if (casesByCity?.Count() > 0)
+    {
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Distance
+                    </th>
+                    <th>
+                        Cases
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in casesByCity)
+                {
+                    <tr>
+                        <td>
+                            @item.Country
+                        </td>
+                        <td>
+                            @item.City
+                        </td>
+                        <td>
+                            @item.Distance.ToString("N2") km
+                        </td>
+                        <td>
+                            @item.Confirmed
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var x = document.getElementById("x");
+        var lat = document.getElementById("latitude");
+        var long = document.getElementById("longitude");
+        var pos =  @Html.Raw(Json.Serialize(Model));
+
+        var markerArounds = [];
+
+          var fontAwesomeIcon = L.divIcon({    html: '<i class="your-position"></i>',    iconSize: [25, 25],    className: 'myDivIcon'});
+
+        var map = L.map('mapid').setView([51.505, -0.09], 5);
+        var marker = L.marker([51.505, -0.09], { icon: fontAwesomeIcon, draggable: true }).on('move', function (ev) {
+            if (lat && long) {
+            lat.value = ev.latlng.lat;
+            long.value = ev.latlng.lng;
+            }
+}).addTo(map).bindPopup('Your position');
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+        if (pos) {
+            if (pos && pos.G) {
+                setMarker(pos.G, pos.H);
+            }
+        }
+
+        function getLocation() {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                x.innerHTML = "";
+            }
+            else { x.innerHTML = "Geolocation is not supported by this browser."; }
+        }
+
+        function showPosition(position) {
+            var latlondata = position.coords.latitude + "," + position.coords.longitude;
+            lat.value = position.coords.latitude;
+            long.value = position.coords.longitude;
+
+            let copy = {
+                latitude: position.coords.latitude,
+                longitude:position.coords.longitude
+            };
+            var crd = JSON.stringify(copy);
+            console.log(position.coords);
+            //localStorage.setItem("position",crd);
+
+            setMarker(position.coords.latitude,  position.coords.longitude);
+                 }
+
+        function updateMarker(coord) {
+            if (lat && long) {
+                var latitude = lat.value;
+                var longitude = long.value;
+                setMarker(latitude, longitude);
+            }
+        }
+
+        function clearMarkers() {
+            console.log("clear");
+            for(var i=0;i<markerArounds.length;i++) {
+                map.removeLayer(markerArounds[i]);
+            }
+            markerArounds=[];
+        }
+
+        function setMarker(latitude,longitude) {
+            marker.setLatLng([latitude, longitude]);
+            map.panTo([latitude, longitude]);
+        }
+
+        function showError(error) {
+            if (error.code == 1) {
+                x.innerHTML = "User denied the request for Geolocation. Activate it on your browser and click on Get Localisation."
+            }
+            else if (err.code == 2) {
+                x.innerHTML = "Location information is unavailable."
+            }
+            else if (err.code == 3) {
+                x.innerHTML = "The request to get user location timed out."
+            }
+            else {
+                x.innerHTML = "An unknown error occurred."
+            }
+        }
+
+        @if (Model == null || Convert.ToInt32(Model?.Latitude)==0 || (Model.Latitude== 51.505 && Model.Longitude == -0.09 )) {
+            @:getLocation();
+        }
+
+        var cases = @Html.Raw(Json.Serialize(ViewBag.cases));
+
+        if (cases && cases.length) {
+            for (var i = 0; i < cases.length; i++) {
+                var item = cases[i];
+                var poptext = (item.B||item.A) + "<br/>" + item.E+ " confirmed";
+                var m = L.marker([item.C.G, item.C.H]).addTo(map).bindTooltip(poptext);
+                markerArounds.push(m);
+            }
+        }
+
+    </script>
+
+}
+
+

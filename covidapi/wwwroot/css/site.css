@@ -1,0 +1,142 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+/* Eddy Style */
+
+.map-frame {
+    width: 100%;
+    height: calc(100vh - 200px);
+}
+
+.container.header {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.container.body {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.infos span {
+    margin-right: 10px;
+}
+
+.modal-dialog {
+    position: fixed;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: 0;
+}
+
+
+.navbar, footer .container-fluid {
+    background-color: #006968;
+    color: white;
+}
+
+footer .container-fluid {
+    background-color: #006968;
+    color: white;
+}
+
+
+.your-position {
+    border-width: 2px;
+    border-style: solid;
+    border-color: blue;
+    height: 25px;
+    width: 25px;
+    background-color: rgba(0,0,255,0.3);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.map-around {
+    height: 300px;
+    width: 355px;
+}
+
+table th, table td {
+    padding-left: 0.4rem !important;
+    padding-right: 25px !important;
+}
+
+@media screen and (max-height: 800px) {
+    .map-around {
+        height: 250px;
+    }
+}
